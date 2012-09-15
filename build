@@ -1,0 +1,48 @@
+#!/bin/sh
+############# ENVIRONMENT #####################################################################
+if [ $# -eq 0 ]; then
+	env=`dirname $( pwd ) | sed 's,^\(.*/\)\?\([^/]*\),\2,'`
+else
+	env=$1
+fi
+oldenv=`cat env` 2> /dev/null
+if [ "$env" != "$oldenv" ] && [ "$oldenv" != "" ]; then
+	echo "Current environment '$oldenv' differ from '$env'"
+	echo "if you really want to change the environment you can execute 'rm env'"
+	exit
+fi
+#Checks whether it is in tac server or not, because TAC server doesn't have .svn folder
+if [ "$env" != "dev" ] && [ "$env" != "uat" ] && [ "$env" != "production" ]; then
+    if [ `svn update build | grep -c "build"` -gt 0 ]; then
+        echo "build updated, please re-execute the command."
+        exit ### we must update the build script first
+    fi
+    svn update ## code update
+fi
+echo "building ($env)" 
+echo "$env" > env
+
+############# CODE AND DATABASE UPDATE ########################################################
+
+if [ "$2" = "init" ]; then ## db reset
+	echo "Backing up database..."
+	php database.php dump backups/build-backup-`date +"%Y-%m-%d-%H-%M"`-revision-`svn info | grep "Revision\:" |cut -c11-`.sql
+	php database.php reset database/init.sql ## put init SQL file name here. By default, it is init.sql
+fi
+
+php database.php import database/update.sql ## db update, this update SHOULD always be executed
+
+if [ "$2" = "init" ]; then ## db reset
+	if [ "$1" != "prod" ]; then
+    ## if the environment is not production, then we can put dev fixtures here.
+		php database.php import database/fixtures.sql
+	fi
+fi
+
+############ FILE PERMISSION ##################
+## we can set the file permission here. Below is example of setting uploads folder to 777
+echo "Setting file permissions..." 
+chmod -R 777 fuel/application/cache/ 2> /dev/null
+chmod -R 777 fuel/application/cache/dwoo/ 2> /dev/null
+chmod -R 777 fuel/application/cache/dwoo/compiled/ 2> /dev/null
+chmod -R 777 fuel/application/assets/images/ 2> /dev/null
