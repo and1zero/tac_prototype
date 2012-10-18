@@ -20,7 +20,7 @@ switch (ENVIRONMENT) {
         define('_DB_SERVER_', 'localhost');
         define('_DB_NAME_', 'tac_prototype');
         define('_DB_USER_', 'tac_prototype');
-        define('_DB_PASSWD_', 'tacdeV888');
+        define('_DB_PASSWD_', '?');
         break;
 
     /* Chusuk */
@@ -28,7 +28,7 @@ switch (ENVIRONMENT) {
         define('_DB_SERVER_', 'localhost');
         define('_DB_NAME_', 'tac_prototype');
         define('_DB_USER_', 'tac_prototype');
-        define('_DB_PASSWD_', 'tacuaT888');
+        define('_DB_PASSWD_', '?');
         break;
 
     /* Local Development */

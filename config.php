@@ -10,7 +10,7 @@
  * These are all the reserved names and defined constants which are used by CodeIgniter.
  * http://codeigniter.com/user_guide/general/reserved_names.html
  */
-switch (ENVIRONMENT) {
+switch ($env = trim(file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'env'))) {
 
     /* Live application */
     case 'production':
@@ -25,7 +25,7 @@ switch (ENVIRONMENT) {
         define('_DB_SERVER_', 'localhost');
         define('_DB_NAME_', 'tac_prototype');
         define('_DB_USER_', 'tac_prototype');
-        define('_DB_PASSWD_', 'tacdeV888');
+        define('_DB_PASSWD_', '?');
         break;
 
     /* Chusuk */
@@ -33,7 +33,7 @@ switch (ENVIRONMENT) {
         define('_DB_SERVER_', 'localhost');
         define('_DB_NAME_', 'tac_prototype');
         define('_DB_USER_', 'tac_prototype');
-        define('_DB_PASSWD_', 'tacuaT888');
+        define('_DB_PASSWD_', '?');
         break;
 
     /* Local Development */
@@ -41,7 +41,7 @@ switch (ENVIRONMENT) {
         define('_DB_SERVER_', 'localhost');
         define('_DB_NAME_', 'tac_prototype');
         define('_DB_USER_', 'root');
-        define('_DB_PASSWD_', '');
+        define('_DB_PASSWD_', '?');
         break;
 
     default:
